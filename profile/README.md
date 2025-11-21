@@ -34,8 +34,7 @@ To contribute:
 ---
 
 ## 📜 License
-All OverLab Group projects are released under the **MIT License**.  
-This ensures freedom to use, modify, and distribute our work with proper attribution.  
+All OverLab Group projects are released under the **MIT, GPL, AGPL, BSD, or Apache2 License**.
 
 > Note: While many of our projects are open-source, not all of them may be publicly available.  
 > Some tools and research are kept private due to security, ethical, or strategic reasons.  
