@@ -41,7 +41,7 @@ Your voice matters. Your code matters. Your ideas matter.
 ## 📜 License
 MIT, GPL, AGPL, BSD, Apache2 — free to use, remix, and share. 🆓  
 
-🔒 Open Source & Private Projects
+## 🔒 Open Source & Private Projects
 At OverLab Group, we strongly believe in the power of open-source — most of our projects are released publicly, free to use, remix, and share. 🌍✨
 But not everything can be open. Some projects remain private due to security, ethical, or strategic reasons.
 - 🛡️ Security → Tools that could be misused for malicious purposes
