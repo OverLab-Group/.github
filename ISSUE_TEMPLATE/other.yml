@@ -1,0 +1,21 @@
+name: 📝 Just a note / Question
+description: Share a thought, ask a question, or start a discussion
+title: "[Note]: "
+labels: question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reaching out! This can be anything — an idea, a doubt, or just a hello.
+  - type: textarea
+    id: content
+    attributes:
+      label: What's on your mind?
+      description: Be as detailed (or as short) as you like.
+    validations:
+      required: true
+  - type: input
+    id: context
+    attributes:
+      label: Related project (if any)
+      description: e.g., OLSRT, Alphabet, OLWSX, etc.
