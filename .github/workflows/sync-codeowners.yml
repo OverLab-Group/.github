@@ -1,0 +1,95 @@
+# -------------------------------------------------------------------
+# GitHub Action: Sync CODEOWNERS to All Organization Repositories
+# -------------------------------------------------------------------
+# This workflow automatically synchronizes the CODEOWNERS file from the
+# .github repository to every **public** repository within the OverLab-Group
+# organization. It runs whenever the CODEOWNERS file is updated on the
+# default branch, or can be triggered manually.
+
+name: Sync CODEOWNERS to all repos
+
+on:
+  # Trigger on pushes to main/master that touch the CODEOWNERS file
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'CODEOWNERS'              # if placed in repository root
+      - '.github/CODEOWNERS'      # if placed inside .github directory
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ---------------------------------------------------------------
+      # Step 1: Check out the .github repository (where the canonical
+      #         CODEOWNERS file lives).
+      # ---------------------------------------------------------------
+      - name: Checkout .github repository
+        uses: actions/checkout@v4
+
+      # ---------------------------------------------------------------
+      # Step 2: Locate the CODEOWNERS file.
+      #         Prefer .github/CODEOWNERS, fallback to root CODEOWNERS.
+      # ---------------------------------------------------------------
+      - name: Get CODEOWNERS file
+        id: get_file
+        run: |
+          if [ -f ".github/CODEOWNERS" ]; then
+            echo "path=.github/CODEOWNERS" >> $GITHUB_OUTPUT
+          elif [ -f "CODEOWNERS" ]; then
+            echo "path=CODEOWNERS" >> $GITHUB_OUTPUT
+          else
+            echo "CODEOWNERS not found!" && exit 1
+          fi
+
+      # ---------------------------------------------------------------
+      # Step 3: Fetch the list of **public** repositories under the
+      #         OverLab-Group organization. The .github repo itself is
+      #         excluded because it is the source, not a target.
+      # ---------------------------------------------------------------
+      - name: Fetch all public repositories in the organization
+        id: fetch_repos
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN }}   # requires 'repo' scope
+        run: |
+          # List all public repos, extract names, filter out .github
+          repos=$(gh repo list OverLab-Group \
+                  --limit 1000 \
+                  --json name \
+                  --jq '.[].name' \
+                  | grep -v '^\.github$')
+          # Convert the multi-line list into a JSON array for later use
+          echo "repos=$(echo "$repos" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+
+      # ---------------------------------------------------------------
+      # Step 4: For each repository, upload (or overwrite) the
+      #         CODEOWNERS file into the .github/ directory of its
+      #         default branch.
+      # ---------------------------------------------------------------
+      - name: Copy CODEOWNERS to each repository
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
+          SOURCE_PATH: ${{ steps.get_file.outputs.path }}
+        run: |
+          for repo in ${{ join(fromJSON(steps.fetch_repos.outputs.repos), ' ') }}; do
+            echo "Syncing CODEOWNERS to OverLab-Group/$repo"
+
+            # Retrieve the default branch name of the target repository
+            default_branch=$(gh api repos/OverLab-Group/$repo \
+                             --jq '.default_branch')
+
+            # Upload the file via the GitHub Contents API.
+            # The content must be base64‑encoded.
+            gh api -X PUT "repos/OverLab-Group/$repo/contents/.github/CODEOWNERS" \
+              --field message="chore: sync CODEOWNERS from .github" \
+              --field content="$(base64 -w0 $SOURCE_PATH)" \
+              --field branch="$default_branch" \
+              --field committer.name="overlab-bot" \
+              --field committer.email="overlab.group@gmail.com" \
+              || echo "⚠️ Failed to sync to $repo (maybe .github/ dir doesn't exist?)"
+          done
