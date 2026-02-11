@@ -1,0 +1,9 @@
+# CODEOWNERS: Defines who is responsible for reviewing changes.
+# Syntax: pattern @owner1 @owner2 @org/team
+
+# Default owners for everything in the entire repository
+* @JavadInteger @OverLab-Group/overlab-dev-team
+
+# You can also specify per-path rules if needed, for example:
+# /docs/ @JavadInteger
+# /src/security/ @OverLab-Group/overlab-dev-team
