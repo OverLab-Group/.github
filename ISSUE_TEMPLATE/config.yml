@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/orgs/OverLab-Group/discussions
+    about: Have questions or ideas? Join the conversation here first.
+  - name: 📧 Security Reports
+    url: https://github.com/OverLab-Group/.github/blob/main/SECURITY.md
+    about: Please report security vulnerabilities responsibly via email — never in public issues.
