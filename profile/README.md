@@ -53,14 +53,6 @@ We strongly recommend watching these repositories to see OverLab in action:
   *A JavaScript/TypeScript framework with Reactive DOM, SSR by default, and a utility‑first CSS engine — all in one core.*  
   🟢 **Active**
 
-- **[OLWSX – OverLab Web ServerX](https://github.com/OverLab-Group/OLWSX)**  
-  *An actor‑based web server featuring 3‑layered security (connection → edge → actor/WAF), AI‑driven optimizations, and a cascading resource manager (CPU → RAM → GPU → NVMe → SSD → HDD).*  
-  🟢 **Active**
-
-- **[Atoqu – Atomic‑Quantum Engine](https://github.com/OverLab-Group/atoqu)**  
-  *An atomic search engine (micro‑service‑like components) with quantum‑inspired algorithms — designed to run entirely on your local machine.*  
-  ⏳ **Planned**
-
 ---
 
 ## 📜 License  
